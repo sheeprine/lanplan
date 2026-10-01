@@ -34,10 +34,11 @@ Data persists in `./data/lanplan.db` (SQLite file on a bind-mounted volume).
 
 ## Development (without Docker)
 
+Dependencies are managed with [uv](https://docs.astral.sh/uv/).
+
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 export PARTY_PASSWORD=dev PARTY_NAME=Dev SECRET_KEY=dev-secret DATABASE_PATH=./data/lanplan.db
 mkdir -p data
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
