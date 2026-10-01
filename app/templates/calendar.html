@@ -6,6 +6,9 @@
   <a href="/calendar?start={{ prev_start.isoformat() }}">&larr; previous week</a>
   <a href="/calendar?start={{ today.isoformat() }}">this week</a>
   <a href="/calendar?start={{ next_start.isoformat() }}">next week &rarr;</a>
+  {% if first_arrival %}
+  <a href="/calendar?start={{ first_arrival.isoformat() }}">jump to first arrival ({{ first_arrival.strftime('%b %d') }})</a>
+  {% endif %}
 </div>
 
 <div class="card">

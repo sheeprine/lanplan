@@ -33,5 +33,14 @@
       <p class="muted">No game sessions scheduled yet. <a href="/games">Plan one</a>.</p>
     {% endif %}
   </div>
+
+  <div class="card">
+    <h2>First arrival</h2>
+    {% if first_arrival %}
+      <p><a href="/calendar?start={{ first_arrival.isoformat() }}">{{ first_arrival.strftime('%a %b %d') }}</a></p>
+    {% else %}
+      <p class="muted">Nobody has marked their attendance yet. <a href="/calendar">Add yourself on the calendar</a>.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

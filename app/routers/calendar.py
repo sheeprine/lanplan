@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.auth import get_current_person
@@ -65,6 +65,7 @@ def calendar_view(
     view_start = _parse_start(start)
     days = _build_days(db, view_start)
     people = db.scalars(select(Person).order_by(Person.name)).all()
+    first_arrival = db.scalar(select(func.min(Attendance.start)))
     return templates.TemplateResponse(
         request,
         "calendar.html",
@@ -77,6 +78,7 @@ def calendar_view(
             "today": date.today(),
             "prev_start": view_start - timedelta(days=DAYS_IN_VIEW),
             "next_start": view_start + timedelta(days=DAYS_IN_VIEW),
+            "first_arrival": first_arrival.date() if first_arrival else None,
         },
     )
 

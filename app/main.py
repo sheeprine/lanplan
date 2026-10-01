@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -74,6 +74,8 @@ def dashboard(
         select(GameSession).where(GameSession.end > now).order_by(GameSession.start).limit(5)
     ).all()
 
+    first_arrival = db.scalar(select(func.min(Attendance.start)))
+
     return templates.TemplateResponse(
         request,
         "dashboard.html",
@@ -82,5 +84,6 @@ def dashboard(
             "current_person": current_person,
             "here_today": here_today,
             "upcoming_sessions": upcoming_sessions,
+            "first_arrival": first_arrival.date() if first_arrival else None,
         },
     )
