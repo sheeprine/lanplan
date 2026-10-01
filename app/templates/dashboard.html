@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome{% if current_person %}, {{ current_person.name }}{% endif %}</h1>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Here today</h2>
+    {% if here_today %}
+      <div>
+        {% for person in here_today %}
+          <span class="badge"><span class="dot" style="background: {{ person.color }}"></span>{{ person.name }}</span>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">Nobody has marked themselves as here today yet. <a href="/calendar">Add yourself on the calendar</a>.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Upcoming game sessions</h2>
+    {% if upcoming_sessions %}
+      <ul class="plain">
+        {% for session in upcoming_sessions %}
+          <li>
+            <strong>{{ session.game.name }}</strong>
+            <span class="muted small">{{ session.start.strftime('%a %b %d, %H:%M') }} - {{ session.end.strftime('%H:%M') }}</span>
+            <br>
+            <span class="small muted">{{ session.players|length }} player(s) signed up</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No game sessions scheduled yet. <a href="/games">Plan one</a>.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

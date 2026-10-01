@@ -1,0 +1,31 @@
+<div class="card" id="session-{{ session.id }}">
+  <strong>{{ session.start.strftime('%a %b %d, %H:%M') }} &ndash; {{ session.end.strftime('%H:%M') }}</strong>
+  {% if session.notes %}<p class="small muted">{{ session.notes }}</p>{% endif %}
+
+  <div>
+    {% for player in session.players %}
+      <span class="badge"><span class="dot" style="background: {{ player.color }}"></span>{{ player.name }}</span>
+    {% else %}
+      <span class="muted small">Nobody signed up yet</span>
+    {% endfor %}
+  </div>
+
+  {% if current_person %}
+    <form
+      hx-post="/games/{{ game.id }}/sessions/{{ session.id }}/toggle"
+      hx-target="#session-{{ session.id }}"
+      hx-swap="outerHTML"
+      style="margin-top: 0.5rem;"
+    >
+      {% if current_person in session.players %}
+        <button type="submit" class="secondary small">Leave</button>
+      {% else %}
+        <button type="submit" class="small">I'm in</button>
+      {% endif %}
+    </form>
+  {% endif %}
+
+  <form method="post" action="/games/{{ game.id }}/sessions/{{ session.id }}/delete" style="margin-top: 0.25rem;" onsubmit="return confirm('Remove this session?');">
+    <button type="submit" class="secondary small">Remove session</button>
+  </form>
+</div>

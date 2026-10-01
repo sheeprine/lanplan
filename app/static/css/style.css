@@ -1,0 +1,257 @@
+:root {
+  color-scheme: dark;
+  --bg: #15161b;
+  --bg-elevated: #1e2029;
+  --bg-card: #262a36;
+  --border: #363c4e;
+  --text: #e7e9ee;
+  --text-dim: #9aa0b4;
+  --accent: #6ee7b7;
+  --accent-strong: #34d399;
+  --danger: #e05252;
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+header.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+header.topbar .brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+nav.main-nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+nav.main-nav a {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+nav.main-nav a.active,
+nav.main-nav a:hover {
+  color: var(--text);
+}
+
+.whoami {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+
+form.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  gap: 0.25rem;
+}
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+textarea {
+  min-width: 220px;
+}
+
+button, input[type="submit"] {
+  cursor: pointer;
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #0a1f17;
+  font-weight: 700;
+}
+button:hover, input[type="submit"]:hover {
+  filter: brightness(1.08);
+}
+
+button.secondary {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+button.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+}
+
+.error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.login-wrap {
+  max-width: 360px;
+  margin: 4rem auto;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+}
+
+.day-col {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  min-height: 160px;
+}
+
+.day-col.today {
+  border-color: var(--accent-strong);
+}
+
+.day-col h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.block {
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+}
+
+.block.attendance {
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
+
+.block.session {
+  background: var(--bg-elevated);
+  border-left: 3px solid #e0a052;
+}
+
+.nav-week {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+ul.plain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.plain li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+}
+ul.plain li:last-child {
+  border-bottom: none;
+}
+
+.muted {
+  color: var(--text-dim);
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.delete-x {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-weight: 700;
+  padding: 0 0.25rem;
+}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<p><a href="/games">&larr; all games</a></p>
+<h1>{{ game.name }}</h1>
+{% if game.notes %}<p class="muted">{{ game.notes }}</p>{% endif %}
+
+<div class="card">
+  <h2>Schedule a session</h2>
+  <form class="inline" method="post" action="/games/{{ game.id }}/sessions">
+    <label>Start
+      <input type="datetime-local" name="start" required>
+    </label>
+    <label>End
+      <input type="datetime-local" name="end" required>
+    </label>
+    <label>Notes
+      <input type="text" name="notes" placeholder="e.g. need one more player">
+    </label>
+    <button type="submit">Schedule</button>
+  </form>
+</div>
+
+<h2>Sessions</h2>
+{% for session in game.sessions %}
+  {% include "partials/session_card.html" %}
+{% else %}
+  <p class="muted">No sessions scheduled yet.</p>
+{% endfor %}
+{% endblock %}

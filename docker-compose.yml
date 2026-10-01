@@ -1,0 +1,13 @@
+services:
+  lanplan:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PARTY_NAME: ${PARTY_NAME:-LAN Party}
+      PARTY_PASSWORD: ${PARTY_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_PATH: /data/lanplan.db
+    volumes:
+      - ./data:/data

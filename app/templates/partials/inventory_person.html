@@ -1,0 +1,51 @@
+<div class="card" id="inventory-{{ person.id }}">
+  <h3><span class="dot" style="background: {{ person.color }}"></span> {{ person.name }}</h3>
+
+  {% if person.inventory_items %}
+    <ul class="plain">
+      {% for item in person.inventory_items %}
+        <li>
+          <strong>{{ item.quantity }}&times; {{ item.name }}</strong>
+          <span class="badge small">{{ item.category }}</span>
+          {% if item.notes %}<div class="small muted">{{ item.notes }}</div>{% endif %}
+          {% if current_person and current_person.id == person.id %}
+            <form
+              hx-post="/inventory/items/{{ item.id }}/delete"
+              hx-target="#inventory-{{ person.id }}"
+              hx-swap="outerHTML"
+              style="display:inline;"
+            >
+              <button type="submit" class="delete-x" title="remove">&times;</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted small">Nothing listed yet.</p>
+  {% endif %}
+
+  {% if current_person and current_person.id == person.id %}
+    <form
+      class="inline"
+      hx-post="/inventory/items"
+      hx-target="#inventory-{{ person.id }}"
+      hx-swap="outerHTML"
+      style="margin-top: 0.5rem;"
+    >
+      <label>Item
+        <input type="text" name="name" required placeholder="e.g. HDMI cable">
+      </label>
+      <label>Category
+        <input type="text" name="category" placeholder="Peripherals" list="categories">
+      </label>
+      <label>Qty
+        <input type="number" name="quantity" value="1" min="1" style="width: 4rem;">
+      </label>
+      <label>Notes
+        <input type="text" name="notes" placeholder="optional">
+      </label>
+      <button type="submit">Add</button>
+    </form>
+  {% endif %}
+</div>

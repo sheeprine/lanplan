@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Inventory</h1>
+<p class="muted">What everyone is bringing. You can only edit your own list.</p>
+
+<datalist id="categories">
+  <option value="PC / Peripherals">
+  <option value="Networking">
+  <option value="Snacks & Drinks">
+  <option value="Furniture">
+  <option value="Other">
+</datalist>
+
+<div class="grid grid-2">
+  {% for person in people %}
+    {% include "partials/inventory_person.html" %}
+  {% else %}
+    <p class="muted">No one has joined yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

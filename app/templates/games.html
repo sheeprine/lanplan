@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Games</h1>
+
+<div class="card">
+  <h2>Add a game</h2>
+  <form class="inline" method="post" action="/games">
+    <label>Name
+      <input type="text" name="name" required>
+    </label>
+    <label>Notes
+      <input type="text" name="notes" placeholder="e.g. need 4 controllers">
+    </label>
+    <button type="submit">Add game</button>
+  </form>
+</div>
+
+<div class="grid grid-2">
+  {% for game in games %}
+    <div class="card">
+      <h3><a href="/games/{{ game.id }}">{{ game.name }}</a></h3>
+      {% if game.notes %}<p class="small muted">{{ game.notes }}</p>{% endif %}
+      <p class="small muted">{{ game.sessions|length }} session(s) planned</p>
+      <form method="post" action="/games/{{ game.id }}/delete" onsubmit="return confirm('Delete {{ game.name }} and all its sessions?');">
+        <button type="submit" class="secondary small">Delete</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="muted">No games added yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

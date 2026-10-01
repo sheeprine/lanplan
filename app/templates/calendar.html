@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Calendar</h1>
+
+<div class="nav-week">
+  <a href="/calendar?start={{ prev_start.isoformat() }}">&larr; previous week</a>
+  <a href="/calendar?start={{ today.isoformat() }}">this week</a>
+  <a href="/calendar?start={{ next_start.isoformat() }}">next week &rarr;</a>
+</div>
+
+<div class="card">
+  <h2>Mark your attendance</h2>
+  {% if current_person %}
+  <form class="inline" method="post" action="/calendar/attendance">
+    <input type="hidden" name="view_start" value="{{ view_start.isoformat() }}">
+    <label>Arrive
+      <input type="datetime-local" name="start" required>
+    </label>
+    <label>Leave
+      <input type="datetime-local" name="end" required>
+    </label>
+    <button type="submit">I'll be here</button>
+  </form>
+  {% else %}
+  <p class="muted"><a href="/select-person">Pick your name</a> to mark attendance.</p>
+  {% endif %}
+</div>
+
+<div class="calendar-grid">
+  {% for day in days %}
+  <div class="day-col {% if day.is_today %}today{% endif %}">
+    <h3>{{ day.date.strftime('%a %b %d') }}</h3>
+
+    {% if day.attendances %}
+      {% for a in day.attendances %}
+        <div class="block attendance">
+          <span class="dot" style="background: {{ a.person.color }}"></span>
+          {{ a.person.name }}
+          <div class="small muted">{{ a.start.strftime('%H:%M') }}&ndash;{{ a.end.strftime('%H:%M') }}</div>
+          {% if current_person and a.person_id == current_person.id %}
+            <form method="post" action="/calendar/attendance/{{ a.id }}/delete">
+              <input type="hidden" name="view_start" value="{{ view_start.isoformat() }}">
+              <button type="submit" class="delete-x" title="remove">&times;</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="muted small">Nobody yet</p>
+    {% endif %}
+
+    {% if day.sessions %}
+      <hr style="border-color: var(--border);">
+      {% for s in day.sessions %}
+        <div class="block session">
+          <a href="/games/{{ s.game.id }}">{{ s.game.name }}</a>
+          <div class="small muted">{{ s.start.strftime('%H:%M') }}&ndash;{{ s.end.strftime('%H:%M') }}</div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
