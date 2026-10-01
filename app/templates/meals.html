@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Meals</h1>
+<p class="muted">Plan what's being eaten and when. Claim cooking duty or just mark yourself in.</p>
+
+<div class="card">
+  <h2>Plan a meal</h2>
+  <form class="inline" method="post" action="/meals">
+    <label>Name
+      <input type="text" name="name" required placeholder="e.g. Friday dinner">
+    </label>
+    <label>When
+      <input type="datetime-local" name="start" required>
+    </label>
+    <label>Notes
+      <input type="text" name="notes" placeholder="e.g. pizza order, allergies">
+    </label>
+    <button type="submit">Add meal</button>
+  </form>
+</div>
+
+<div class="grid grid-2">
+  {% for meal in meals %}
+    {% include "partials/meal_card.html" %}
+  {% else %}
+    <p class="muted">No meals planned yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

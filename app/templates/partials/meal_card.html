@@ -1,0 +1,77 @@
+<div class="card" id="meal-{{ meal.id }}">
+  <h3>{{ meal.name }}</h3>
+  <p class="small muted">{{ meal.start.strftime('%a %b %d, %H:%M') }}</p>
+  {% if meal.notes %}<p class="small muted">{{ meal.notes }}</p>{% endif %}
+
+  <p class="small">
+    Cook:
+    {% if meal.cook %}
+      <span class="badge"><span class="dot" style="background: {{ meal.cook.color }}"></span>{{ meal.cook.name }}</span>
+    {% else %}
+      <span class="muted">nobody yet</span>
+    {% endif %}
+  </p>
+
+  <p class="small">
+    Cleanup:
+    {% if meal.cleaner %}
+      <span class="badge"><span class="dot" style="background: {{ meal.cleaner.color }}"></span>{{ meal.cleaner.name }}</span>
+    {% else %}
+      <span class="muted">nobody yet</span>
+    {% endif %}
+  </p>
+
+  <div>
+    {% for person in meal.attendees %}
+      <span class="badge"><span class="dot" style="background: {{ person.color }}"></span>{{ person.name }}</span>
+    {% else %}
+      <span class="muted small">Nobody signed up to eat yet</span>
+    {% endfor %}
+  </div>
+
+  {% if current_person %}
+    <div class="inline" style="margin-top: 0.5rem;">
+      <form
+        hx-post="/meals/{{ meal.id }}/cook"
+        hx-target="#meal-{{ meal.id }}"
+        hx-swap="outerHTML"
+      >
+        {% if meal.cook_id == current_person.id %}
+          <button type="submit" class="secondary small">Unclaim cooking</button>
+        {% elif meal.cook is none %}
+          <button type="submit" class="small">I'll cook</button>
+        {% else %}
+          <button type="submit" class="secondary small" disabled>Already claimed</button>
+        {% endif %}
+      </form>
+      <form
+        hx-post="/meals/{{ meal.id }}/clean"
+        hx-target="#meal-{{ meal.id }}"
+        hx-swap="outerHTML"
+      >
+        {% if meal.cleaner_id == current_person.id %}
+          <button type="submit" class="secondary small">Unclaim cleanup</button>
+        {% elif meal.cleaner is none %}
+          <button type="submit" class="small">I'll clean up</button>
+        {% else %}
+          <button type="submit" class="secondary small" disabled>Already claimed</button>
+        {% endif %}
+      </form>
+      <form
+        hx-post="/meals/{{ meal.id }}/toggle"
+        hx-target="#meal-{{ meal.id }}"
+        hx-swap="outerHTML"
+      >
+        {% if current_person in meal.attendees %}
+          <button type="submit" class="secondary small">Not eating</button>
+        {% else %}
+          <button type="submit" class="small">I'm eating</button>
+        {% endif %}
+      </form>
+    </div>
+  {% endif %}
+
+  <form method="post" action="/meals/{{ meal.id }}/delete" style="margin-top: 0.25rem;" onsubmit="return confirm('Remove {{ meal.name }}?');">
+    <button type="submit" class="secondary small">Remove meal</button>
+  </form>
+</div>

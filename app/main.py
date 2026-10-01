@@ -16,6 +16,7 @@ from app.routers import auth as auth_router
 from app.routers import calendar as calendar_router
 from app.routers import games as games_router
 from app.routers import inventory as inventory_router
+from app.routers import meals as meals_router
 from sqlalchemy.orm import Session
 
 app = FastAPI(title=PARTY_NAME)
@@ -45,6 +46,7 @@ app.include_router(auth_router.router)
 app.include_router(calendar_router.router)
 app.include_router(games_router.router)
 app.include_router(inventory_router.router)
+app.include_router(meals_router.router)
 
 
 @app.on_event("startup")

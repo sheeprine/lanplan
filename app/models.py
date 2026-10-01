@@ -17,6 +17,13 @@ game_session_players = Table(
     Column("person_id", ForeignKey("people.id", ondelete="CASCADE"), primary_key=True),
 )
 
+meal_attendees = Table(
+    "meal_attendees",
+    Base.metadata,
+    Column("meal_id", ForeignKey("meals.id", ondelete="CASCADE"), primary_key=True),
+    Column("person_id", ForeignKey("people.id", ondelete="CASCADE"), primary_key=True),
+)
+
 
 class Person(Base):
     __tablename__ = "people"
@@ -34,6 +41,15 @@ class Person(Base):
     )
     game_sessions: Mapped[list["GameSession"]] = relationship(
         secondary=game_session_players, back_populates="players"
+    )
+    meals_eating: Mapped[list["Meal"]] = relationship(
+        secondary=meal_attendees, back_populates="attendees"
+    )
+    meals_cooking: Mapped[list["Meal"]] = relationship(
+        back_populates="cook", foreign_keys="Meal.cook_id"
+    )
+    meals_cleaning: Mapped[list["Meal"]] = relationship(
+        back_populates="cleaner", foreign_keys="Meal.cleaner_id"
     )
 
 
@@ -91,3 +107,30 @@ class InventoryItem(Base):
     notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
 
     person: Mapped["Person"] = relationship(back_populates="inventory_items")
+
+
+class Meal(Base):
+    """A planned meal: when it's happening, who's cooking, who's eating, who's cleaning up."""
+
+    __tablename__ = "meals"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    cook_id: Mapped[int | None] = mapped_column(
+        ForeignKey("people.id", ondelete="SET NULL"), nullable=True
+    )
+    cleaner_id: Mapped[int | None] = mapped_column(
+        ForeignKey("people.id", ondelete="SET NULL"), nullable=True
+    )
+
+    cook: Mapped["Person | None"] = relationship(
+        back_populates="meals_cooking", foreign_keys=[cook_id]
+    )
+    cleaner: Mapped["Person | None"] = relationship(
+        back_populates="meals_cleaning", foreign_keys=[cleaner_id]
+    )
+    attendees: Mapped[list["Person"]] = relationship(
+        secondary=meal_attendees, back_populates="meals_eating"
+    )
