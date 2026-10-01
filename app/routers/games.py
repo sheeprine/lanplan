@@ -3,13 +3,15 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.auth import get_current_person
 from app.config import PARTY_NAME
 from app.database import get_db
-from app.models import Game, GameSession, Person
+from app.models import Attendance, Game, GameSession, Person
+
+DATETIME_INPUT_FORMAT = "%Y-%m-%dT%H:%M"
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -62,10 +64,23 @@ def game_detail(
     game = db.get(Game, game_id)
     if not game:
         return RedirectResponse("/games", status_code=303)
+
+    now = datetime.now()
+    first_arrival = db.scalar(select(func.min(Attendance.start)))
+    last_departure = db.scalar(select(func.max(Attendance.end)))
+    default_start = first_arrival if first_arrival and first_arrival > now else None
+    default_end = last_departure if last_departure and last_departure > now else None
+
     return templates.TemplateResponse(
         request,
         "game_detail.html",
-        {"party_name": PARTY_NAME, "current_person": current_person, "game": game},
+        {
+            "party_name": PARTY_NAME,
+            "current_person": current_person,
+            "game": game,
+            "default_start": default_start.strftime(DATETIME_INPUT_FORMAT) if default_start else None,
+            "default_end": default_end.strftime(DATETIME_INPUT_FORMAT) if default_end else None,
+        },
     )
 
 

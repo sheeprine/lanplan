@@ -8,10 +8,10 @@
   <h2>Schedule a session</h2>
   <form class="inline" method="post" action="/games/{{ game.id }}/sessions">
     <label>Start
-      <input type="datetime-local" name="start" required>
+      <input type="datetime-local" name="start" required value="{{ default_start or '' }}">
     </label>
     <label>End
-      <input type="datetime-local" name="end" required>
+      <input type="datetime-local" name="end" required value="{{ default_end or '' }}">
     </label>
     <label>Notes
       <input type="text" name="notes" placeholder="e.g. need one more player">
