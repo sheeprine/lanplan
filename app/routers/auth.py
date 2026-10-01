@@ -55,13 +55,14 @@ def select_person_form(request: Request, db: Session = Depends(get_db)):
 def select_person_submit(
     request: Request,
     db: Session = Depends(get_db),
-    person_id: int | None = Form(None),
+    person_id: str = Form(""),
     new_name: str = Form(""),
 ):
     if not request.session.get("authed"):
         return RedirectResponse("/login", status_code=303)
 
     new_name = new_name.strip()
+    person_id = int(person_id) if person_id.strip() else None
     if new_name:
         existing = db.scalar(select(Person).where(Person.name == new_name))
         if existing:
