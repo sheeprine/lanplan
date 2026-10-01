@@ -16,14 +16,30 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/inventory")
 def inventory_overview(
     request: Request,
+    view: str = "person",
     db: Session = Depends(get_db),
     current_person: Person | None = Depends(get_current_person),
 ):
     people = db.scalars(select(Person).order_by(Person.name)).all()
+
+    all_items = []
+    if view == "all":
+        all_items = db.scalars(
+            select(InventoryItem)
+            .join(Person)
+            .order_by(InventoryItem.category, InventoryItem.name)
+        ).all()
+
     return templates.TemplateResponse(
         request,
         "inventory.html",
-        {"party_name": PARTY_NAME, "current_person": current_person, "people": people},
+        {
+            "party_name": PARTY_NAME,
+            "current_person": current_person,
+            "people": people,
+            "view": view,
+            "all_items": all_items,
+        },
     )
 
 

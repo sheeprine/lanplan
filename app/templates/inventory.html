@@ -11,11 +11,37 @@
   <option value="Other">
 </datalist>
 
-<div class="grid grid-2">
-  {% for person in people %}
-    {% include "partials/inventory_person.html" %}
-  {% else %}
-    <p class="muted">No one has joined yet.</p>
-  {% endfor %}
+<div class="view-toggle">
+  <a href="/inventory?view=person" {% if view != 'all' %}class="active"{% endif %}>by person</a>
+  <a href="/inventory?view=all" {% if view == 'all' %}class="active"{% endif %}>view all</a>
 </div>
+
+{% if view == "all" %}
+  <div class="card">
+    {% if all_items %}
+      {% for category, items in all_items|groupby("category") %}
+        <h3>{{ category }}</h3>
+        <ul class="plain">
+          {% for item in items %}
+            <li>
+              <strong>{{ item.quantity }}&times; {{ item.name }}</strong>
+              <span class="badge small"><span class="dot" style="background: {{ item.person.color }}"></span>{{ item.person.name }}</span>
+              {% if item.notes %}<div class="small muted">{{ item.notes }}</div>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    {% else %}
+      <p class="muted">Nothing listed yet.</p>
+    {% endif %}
+  </div>
+{% else %}
+  <div class="grid grid-2">
+    {% for person in people %}
+      {% include "partials/inventory_person.html" %}
+    {% else %}
+      <p class="muted">No one has joined yet.</p>
+    {% endfor %}
+  </div>
+{% endif %}
 {% endblock %}

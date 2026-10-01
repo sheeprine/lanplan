@@ -226,6 +226,20 @@ button.danger {
   margin-bottom: 1rem;
 }
 
+.view-toggle {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.view-toggle a {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.view-toggle a.active,
+.view-toggle a:hover {
+  color: var(--text);
+}
+
 ul.plain {
   list-style: none;
   padding: 0;
